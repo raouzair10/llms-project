@@ -28,7 +28,7 @@ st.markdown("""
 Our AI assistant helps you with all your banking-related questions,  
 and allows bank staff to upload new policies, FAQs, or documents to keep the system updated in real-time.
 """)
-
+import requests
 # ---- TABS ----
 tab1, tab2 = st.tabs(["💬 Ask a Question", "📁 Upload Documents"])
 
@@ -39,17 +39,22 @@ with tab1:
     st.markdown("Enter your banking-related question below and get a helpful response:")
 
     query = st.text_input("Your Question", placeholder="e.g., How can I apply for a mortgage loan?")
-    
+
     if st.button("Submit"):
         if query.strip() == "":
             st.warning("Please enter a question.")
         else:
             st.info("🔍 Searching the knowledge base...")
-            st.success("This is a demo response. Your answer will appear here when the system is fully connected.")
-            st.markdown("**Answer:** You can apply for a mortgage loan through our online portal or by visiting your nearest branch with required documents.")
-
-    st.markdown("---")
-    st.caption(f"Response generated on: {datetime.now().strftime('%B %d, %Y %H:%M')}")
+            try:
+                response = requests.post("http://localhost:8000/generate", json={"query": query})
+                if response.status_code == 200:
+                    answer = response.json().get("answer", "No response generated.")
+                    st.success("✅ Response received.")
+                    st.markdown(f"**Answer:** {answer}")
+                else:
+                    st.error("Failed to fetch response from model.")
+            except Exception as e:
+                st.error(f"🚨 Error: {str(e)}")
 
 # ---- TAB 2: Upload Documents ----
 with tab2:
