@@ -1,7 +1,6 @@
 import streamlit as st
 from datetime import datetime
 import requests
-
 st.set_page_config(page_title="BankBot - Secure Customer Support", layout="centered")
 
 # ---- HEADER ----
@@ -47,7 +46,7 @@ with tab1:
         else:
             st.info("🔍 Searching the knowledge base...")
             try:
-                response = requests.post("https://f606-34-125-96-116.ngrok-free.app/generate", json={"query": query})
+                response = requests.post("https://e6e5-34-124-187-135.ngrok-free.app/generate", json={"query": query})
                 if response.status_code == 200:
                     answer = response.json().get("answer", "No response generated.")
                     st.success("✅ Response received.")
@@ -57,32 +56,45 @@ with tab1:
             except Exception as e:
                 st.error(f"🚨 Error: {str(e)}")
 
-# ---- TAB 2: Upload Documents ----
 with tab2:
     st.header("📁 Admin: Upload New Information")
 
-    st.markdown("Authorized personnel can upload new documents (FAQs, policies, service updates):")
-
-    uploaded_files = st.file_uploader(
+    uploaded_file = st.file_uploader(
         "Select TXT or PDF or EXCEL files to upload:",
-        type=["txt", "pdf", "xlsx"],
-        accept_multiple_files=True
+        type=["txt", "pdf", "xlsx", "json"],
+        accept_multiple_files=False
     )
 
-    if st.button("Upload"):
-        if uploaded_files:
-            with st.spinner("Uploading and processing..."):
-                files = [("files", (file.name, file.read(), file.type)) for file in uploaded_files]
-                response = requests.post("https://f606-34-125-96-116.ngrok-free.app/upload", files=files)
-                
-                if response.status_code == 200:
-                    st.success("✅ Upload and ingestion successful!")
-                    st.write(response.json()["message"])
-                else:
-                    st.error("❌ Upload failed.")
-    else:
-        st.warning("⚠️ Please select at least one file before uploading.")
+    if uploaded_file is not None:
+        if st.button("Upload"):
+            try:
+                # Use getvalue() to extract raw bytes
+                file_bytes = uploaded_file.getvalue()
 
+                # Form fields (must match FastAPI param names exactly)
+                data = {
+                    "username": "saleha"
+                }
+
+                # Files dict: must match FastAPI field name: 'uploaded_file'
+                files = {
+                    "uploaded_file": (uploaded_file.name, file_bytes, uploaded_file.type)
+                }
+
+                response = requests.post(
+                    "https://e6e5-34-124-187-135.ngrok-free.app/upload/",
+                    data=data,
+                    files=files
+                )
+
+                if response.ok:
+                    st.success("Upload Successful")
+                else:
+                    st.error(f"Upload failed: {response.status_code}")
+                    st.text(response.text)
+
+            except Exception as e:
+                st.error(f"Upload failed with exception: {e}")
 # ---- FOOTER ----
 st.markdown("---")
 st.markdown("""
