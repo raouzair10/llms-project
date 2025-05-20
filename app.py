@@ -46,7 +46,7 @@ with tab1:
         else:
             st.info("🔍 Searching the knowledge base...")
             try:
-                response = requests.post("https://e6e5-34-124-187-135.ngrok-free.app/generate", json={"query": query})
+                response = requests.post("ngrokurl/generate", json={"query": query})
                 if response.status_code == 200:
                     answer = response.json().get("answer", "No response generated.")
                     st.success("✅ Response received.")
@@ -82,7 +82,7 @@ with tab2:
                 }
 
                 response = requests.post(
-                    "https://e6e5-34-124-187-135.ngrok-free.app/upload/",
+                    "ngrokurl/upload/",
                     data=data,
                     files=files
                 )
