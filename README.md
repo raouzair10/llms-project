@@ -84,8 +84,12 @@ ngrok http 8000  # Copy the public URL
 # Run FastAPI backend
 uvicorn backend:app --reload
 ```
+### 4. Run the Backend.py
+```bash
+!python baxkend.py
+```
 
-### 4. Launch the Streamlit App
+### 5. Launch the Streamlit App
 
 Update `app.py` with your ngrok URL:
 
