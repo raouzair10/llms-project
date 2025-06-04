@@ -64,7 +64,7 @@ This project simulates a real-world LLM application and provides hands-on experi
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/<your-username>/llms-project.git](https://github.com/raouzair10/llms-project.git)
+git clone https://github.com/raouzair10/llms-project.git
 cd llms-project
 ```
 
